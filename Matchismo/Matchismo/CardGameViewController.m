@@ -15,6 +15,7 @@
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *gameModeSegmentedControl;
+@property (weak, nonatomic) IBOutlet UILabel *lastMoveLabel;
 
 @end
 
@@ -52,6 +53,7 @@
         self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
     }
 }
+
 
 - (IBAction)gameMatchModeChanged:(UISegmentedControl *)sender
 {
