@@ -58,6 +58,7 @@ static const int COST_TO_CHOOSE = 1;
             card.chosen = NO;
         } else {
             // match against other chosen cards
+            // create array of matched cards
             for (Card *otherCard in self.cards) {
                 if (otherCard.isChosen && !otherCard.isMatched) {
                     int matchScore = [card match:@[otherCard]];
@@ -76,6 +77,17 @@ static const int COST_TO_CHOOSE = 1;
             card.chosen = YES;
         }
     }
+}
+
+- (NSArray *)chosenAndUnmatchedCards
+{
+    NSMutableArray *otherCards = [NSMutableArray array];
+    for (Card *card in self.cards) {
+        if (card.isChosen && !card.isMatched) {
+            [otherCards addObject:card];
+        }
+    }
+    return otherCards;
 }
 
 @end

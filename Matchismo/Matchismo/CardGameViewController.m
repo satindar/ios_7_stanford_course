@@ -50,6 +50,11 @@
         self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
     }
 }
+- (IBAction)startNewGame:(UIButton *)sender
+{
+    self.game = nil;
+    [self updateUI];
+}
 
 - (NSString *)titleForCard:(Card *)card
 {
