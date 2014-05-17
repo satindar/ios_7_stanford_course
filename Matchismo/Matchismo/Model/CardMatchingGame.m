@@ -11,6 +11,7 @@
 @interface CardMatchingGame()
 @property (nonatomic, readwrite) NSInteger score;
 @property (nonatomic, strong) NSMutableArray *cards; // of Card
+@property (nonatomic) BOOL threeCardMode;
 @end
 
 @implementation CardMatchingGame
@@ -45,8 +46,8 @@
     return (index<[self.cards count]) ? self.cards[index] : nil;
 }
 
-static const int MISMATCH_PENALTY = 2;
-static const int MATCH_BONUS = 4;
+static const int MISMATCH_PENALTY = 1;
+static const int MATCH_BONUS = 1;
 static const int COST_TO_CHOOSE = 1;
 
 - (void)chooseCardAtIndex:(NSInteger)index
@@ -59,24 +60,43 @@ static const int COST_TO_CHOOSE = 1;
         } else {
             // match against other chosen cards
             // create array of matched cards
-            for (Card *otherCard in self.cards) {
-                if (otherCard.isChosen && !otherCard.isMatched) {
-                    int matchScore = [card match:@[otherCard]];
-                    if (matchScore) {
-                        self.score += matchScore * MATCH_BONUS;
+            
+            NSArray *cardsToCompare = [self chosenAndUnmatchedCards];
+            if ([self readyToCalculateScore:cardsToCompare]) {
+                int matchScore = [card match:cardsToCompare];
+                if (matchScore) {
+                    self.score += matchScore * MATCH_BONUS;
+                    for (Card *otherCard in cardsToCompare) {
                         otherCard.matched = YES;
-                        card.matched = YES;
-                    } else {
-                        self.score -= MISMATCH_PENALTY;
+                    }
+                    card.matched = YES;
+                } else {
+                    self.score -= MISMATCH_PENALTY; // for each card perhaps?
+                    for (Card *otherCard in cardsToCompare) {
                         otherCard.chosen = NO;
                     }
-                    break;
                 }
+                
             }
             self.score -= COST_TO_CHOOSE;
             card.chosen = YES;
+            
         }
     }
+}
+
+- (BOOL)readyToCalculateScore:(NSArray *)cardsToCompare
+{
+    BOOL readyToCompare = NO;
+    if (self.threeCardMode == NO) {
+        if ([cardsToCompare count] == 1) {
+            readyToCompare = YES;
+        }
+    } else if ([cardsToCompare count] == 2) {
+        readyToCompare = YES;
+    }
+    
+    return readyToCompare;
 }
 
 - (NSArray *)chosenAndUnmatchedCards

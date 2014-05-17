@@ -25,9 +25,40 @@
             }
         }
         
+    } else if ([otherCards count] == 2) {
+        id firstCardToMatch = [otherCards firstObject];
+        id secondCardToMatch = [otherCards lastObject];
+        if ([firstCardToMatch isKindOfClass:[PlayingCard class]] &&
+            [secondCardToMatch isKindOfClass:[PlayingCard class]]) {
+            PlayingCard *firstCard = (PlayingCard *)firstCardToMatch;
+            PlayingCard *secondCard = (PlayingCard *)secondCardToMatch;
+            
+            if (firstCard.rank == secondCard.rank ||
+                firstCard.rank == self.rank ||
+                secondCard.rank == self.rank) {
+                if ((self.rank == firstCard.rank) && (firstCard.rank == secondCard.rank)) {
+                    score += 10;
+                } else {
+                    score += 2;
+                }
+            }
+            
+            if ([firstCard.suit isEqualToString:secondCard.suit] ||
+                [firstCard.suit isEqualToString:self.suit] ||
+                [secondCard.suit isEqualToString:self.suit]) {
+                if ([firstCard.suit isEqualToString:secondCard.suit] &&
+                    [secondCard.suit isEqualToString:self.suit]) {
+                    score = +2;
+                } else {
+                    score = +1;
+                }
+            }
+        }
     }
     return score;
 }
+
+
 
 - (NSString *)contents
 {
