@@ -11,7 +11,6 @@
 @interface CardMatchingGame()
 @property (nonatomic, readwrite) NSInteger score;
 @property (nonatomic, strong) NSMutableArray *cards; // of Card
-@property (nonatomic) BOOL threeCardMode;
 @end
 
 @implementation CardMatchingGame
@@ -46,8 +45,8 @@
     return (index<[self.cards count]) ? self.cards[index] : nil;
 }
 
-static const int MISMATCH_PENALTY = 1;
-static const int MATCH_BONUS = 1;
+static const int MISMATCH_PENALTY = 2;
+static const int MATCH_BONUS = 4;
 static const int COST_TO_CHOOSE = 1;
 
 - (void)chooseCardAtIndex:(NSInteger)index

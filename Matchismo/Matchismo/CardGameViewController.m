@@ -14,6 +14,7 @@
 @property (strong, nonatomic) CardMatchingGame *game;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *gameModeSegmentedControl;
 
 @end
 
@@ -36,6 +37,7 @@
 {
     int chosenButtonIndex = [self.cardButtons indexOfObject:sender];
     [self.game chooseCardAtIndex:chosenButtonIndex];
+    self.gameModeSegmentedControl.enabled = NO;
     [self updateUI];
 }
 
@@ -50,9 +52,21 @@
         self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
     }
 }
+
+- (IBAction)gameMatchModeChanged:(UISegmentedControl *)sender
+{
+    if (self.gameModeSegmentedControl.selectedSegmentIndex == 0) {
+        self.game.threeCardMode = NO;
+    }
+    if (self.gameModeSegmentedControl.selectedSegmentIndex == 1) {
+        self.game.threeCardMode = YES;
+    }
+}
+
 - (IBAction)startNewGame:(UIButton *)sender
 {
     self.game = nil;
+    self.gameModeSegmentedControl.enabled = YES;
     [self updateUI];
 }
 
