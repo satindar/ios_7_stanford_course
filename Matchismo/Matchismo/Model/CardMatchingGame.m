@@ -25,7 +25,15 @@ static const int COST_TO_CHOOSE = 1;
     return _cards;
 }
 
-- (instancetype)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck
+- (NSMutableArray *)lastCardsPlayed
+{
+    if (!_lastCardsPlayed) _lastCardsPlayed = [[NSMutableArray alloc] init];
+    return _lastCardsPlayed;
+}
+
+- (instancetype)initWithCardCount:(NSUInteger)count
+                        usingDeck:(Deck *)deck
+        cardsToMatchInCurrentMode:(NSUInteger)numberOfCards
 {
     self = [super init];
     
@@ -39,6 +47,7 @@ static const int COST_TO_CHOOSE = 1;
                 break;
             }
         }
+        self.cardsToMatchInCurrentGameMode = numberOfCards;
     }
     
     return self;
@@ -52,49 +61,40 @@ static const int COST_TO_CHOOSE = 1;
 - (void)chooseCardAtIndex:(NSInteger)index
 {
     Card *card = [self cardAtIndex:index];
+    [self.lastCardsPlayed addObject:card];
+    int pointsScored = 0;
     
     if (!card.isMatched) {
         if (card.isChosen) {
             card.chosen = NO;
         } else {
-            // match against other chosen cards
-            // create array of matched cards
-            
             NSArray *cardsToCompare = [self chosenAndUnmatchedCards];
             if ([self readyToCalculateScore:cardsToCompare]) {
                 int matchScore = [card match:cardsToCompare];
                 if (matchScore) {
-                    self.score += matchScore * MATCH_BONUS;
+                    pointsScored += matchScore * MATCH_BONUS;
                     for (Card *otherCard in cardsToCompare) {
                         otherCard.matched = YES;
                     }
                     card.matched = YES;
                 } else {
-                    self.score -= MISMATCH_PENALTY; // for each card perhaps?
+                    pointsScored -= MISMATCH_PENALTY; // for each card perhaps?
                     for (Card *otherCard in cardsToCompare) {
                         otherCard.chosen = NO;
                     }
                 }
-                
             }
-            self.score -= COST_TO_CHOOSE;
+            pointsScored -= COST_TO_CHOOSE;
             card.chosen = YES;
         }
     }
+    self.score += pointsScored;
+    self.pointsLastScored = pointsScored;
 }
 
 - (BOOL)readyToCalculateScore:(NSArray *)cardsToCompare
 {
-    BOOL readyToCompare = NO;
-    if (self.threeCardMode == NO) {
-        if ([cardsToCompare count] == 1) {
-            readyToCompare = YES;
-        }
-    } else if ([cardsToCompare count] == 2) {
-        readyToCompare = YES;
-    }
-    
-    return readyToCompare;
+    return ([cardsToCompare count] == self.cardsToMatchInCurrentGameMode - 1);
 }
 
 - (NSArray *)chosenAndUnmatchedCards
@@ -103,6 +103,7 @@ static const int COST_TO_CHOOSE = 1;
     for (Card *card in self.cards) {
         if (card.isChosen && !card.isMatched) {
             [otherCards addObject:card];
+            [self.lastCardsPlayed addObject:card];
         }
     }
     return otherCards;

@@ -13,11 +13,14 @@
 @interface CardMatchingGame : NSObject
 
 @property (nonatomic,readonly) NSInteger score;
-@property (nonatomic) BOOL threeCardMode;
+@property (nonatomic) NSInteger pointsLastScored;
+@property (nonatomic) NSInteger cardsToMatchInCurrentGameMode;
+@property (nonatomic, strong) NSMutableArray *lastCardsPlayed;
 
 // designated initializer
 - (instancetype)initWithCardCount:(NSUInteger)count
-                        usingDeck:(Deck*)deck;
+                        usingDeck:(Deck*)deck
+        cardsToMatchInCurrentMode:(NSUInteger)numberOfCards;
 
 - (void)chooseCardAtIndex:(NSInteger)index;
 - (Card *)cardAtIndex:(NSUInteger)index;
