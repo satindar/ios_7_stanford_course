@@ -68,28 +68,35 @@ static const int COST_TO_CHOOSE = 1;
         if (card.isChosen) {
             card.chosen = NO;
         } else {
-            NSArray *cardsToCompare = [self chosenAndUnmatchedCards];
-            if ([self readyToCalculateScore:cardsToCompare]) {
-                int matchScore = [card match:cardsToCompare];
-                if (matchScore) {
-                    pointsScored += matchScore * MATCH_BONUS;
-                    for (Card *otherCard in cardsToCompare) {
-                        otherCard.matched = YES;
-                    }
-                    card.matched = YES;
-                } else {
-                    pointsScored -= MISMATCH_PENALTY; // for each card perhaps?
-                    for (Card *otherCard in cardsToCompare) {
-                        otherCard.chosen = NO;
-                    }
-                }
-            }
-            pointsScored -= COST_TO_CHOOSE;
-            card.chosen = YES;
+            pointsScored = [self calculatePoints:card];
         }
     }
     self.score += pointsScored;
     self.pointsLastScored = pointsScored;
+}
+
+- (int)calculatePoints:(Card *)card
+{
+    int pointsScored = 0;
+    NSArray *cardsToCompare = [self chosenAndUnmatchedCards];
+    if ([self readyToCalculateScore:cardsToCompare]) {
+        int matchScore = [card match:cardsToCompare];
+        if (matchScore) {
+            pointsScored += matchScore * MATCH_BONUS;
+            for (Card *otherCard in cardsToCompare) {
+                otherCard.matched = YES;
+            }
+            card.matched = YES;
+        } else {
+            pointsScored -= MISMATCH_PENALTY;
+            for (Card *otherCard in cardsToCompare) {
+                otherCard.chosen = NO;
+            }
+        }
+    }
+    pointsScored -= COST_TO_CHOOSE;
+    card.chosen = YES;
+    return pointsScored;
 }
 
 - (BOOL)readyToCalculateScore:(NSArray *)cardsToCompare

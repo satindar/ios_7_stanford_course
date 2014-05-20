@@ -19,6 +19,44 @@
 @synthesize shading = _shading;
 @synthesize color = _color;
 
+- (int)match:(NSArray *)otherCards
+{
+    int score = 0;
+    
+    for (SetCard *card in otherCards) {
+        if ([self card:(SetCard *)card createsSetWithOtherCards:(NSArray *)otherCards]) {
+            score = 1;
+        }
+    }
+    
+    return score;
+}
+
+- (BOOL)card:(SetCard *)card createsSetWithOtherCards:(NSArray *)otherCards
+{
+    // loop through each attribute
+    NSMutableArray *allCards = [[NSMutableArray alloc] initWithArray:otherCards];
+    [allCards addObject:card];
+
+    if ([self cardAttributesSatisfySetConditions:[allCards valueForKeyPath:@"symbol"]] &&
+        [self cardAttributesSatisfySetConditions:[allCards valueForKeyPath:@"shading"]] &&
+        [self cardAttributesSatisfySetConditions:[allCards valueForKeyPath:@"color"]] &&
+        [self cardAttributesSatisfySetConditions:[allCards valueForKeyPath:@"rank"]]) {
+        return YES;
+    }
+
+    return NO;
+}
+
+- (BOOL)cardAttributesSatisfySetConditions:(NSArray *)attributeValues
+{
+    int attributeCount = [[[NSSet alloc] initWithArray:attributeValues] count];
+    if (attributeCount == 1 || attributeCount == [attributeValues count]) {
+        return YES;
+    }
+    return NO;
+}
+
 + (NSArray *)validSymbols
 {
     return @[@"▲", @"●", @"■"];
