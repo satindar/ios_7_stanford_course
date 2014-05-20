@@ -59,7 +59,6 @@
 }
 
 
-
 - (NSString *)contents
 {
     NSArray *rankStrings = [PlayingCard rankStrings];
@@ -67,71 +66,17 @@
 }
 
 @synthesize suit = _suit;
-@synthesize symbol = _symbol;
-@synthesize shading = _shading;
-@synthesize color = _color;
+
 
 + (NSArray *)validSuits
 {
     return @[@"♣️", @"♥️", @"♦️", @"♠️"];
 }
 
-+ (NSArray *)validSymbols
-{
-    return @[@"▲", @"●", @"■"];
-}
-
-+ (NSArray *)validShadings
-{
-    return @[@"open", @"solid", @"outlined"];
-}
-
-+ (NSArray *)validColors
-{
-    return @[@"red", @"green", @"purple"];
-}
-
-
 - (void)setSuit:(NSString *)suit
 {
     if ([[PlayingCard validSuits] containsObject:suit]) {
         _suit = suit;
-    }
-}
-
-- (NSString *)symbol
-{
-    return _symbol ? _symbol : @"?";
-}
-
-- (void)setSymbol:(NSString *)symbol
-{
-    if ([[PlayingCard validSymbols] containsObject:symbol]) {
-        _symbol = symbol;
-    }
-}
-
-- (NSString *)shading
-{
-    return _shading ? _shading : @"?";
-}
-
-- (void)setShading:(NSString *)shading
-{
-    if ([[PlayingCard validShadings] containsObject:shading]) {
-        _shading = shading;
-    }
-}
-
-- (NSString *)color
-{
-    return _color ? _color : @"?";
-}
-
-- (void)setColor:(NSString *)color
-{
-    if ([[PlayingCard validColors] containsObject:color]) {
-        _color = color;
     }
 }
 
