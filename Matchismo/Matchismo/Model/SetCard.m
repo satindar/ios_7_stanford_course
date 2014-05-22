@@ -34,7 +34,6 @@
 
 - (BOOL)card:(SetCard *)card createsSetWithOtherCards:(NSArray *)otherCards
 {
-    // loop through each attribute
     NSMutableArray *allCards = [[NSMutableArray alloc] initWithArray:otherCards];
     [allCards addObject:card];
 
@@ -123,6 +122,14 @@
     if (rank <= [SetCard maxRank]) {
         _rank = rank;
     }
+}
+
+- (NSDictionary *)cardAttributes
+{
+    return @{@"symbol": self.symbol,
+             @"rank": [SetCard rankStrings][self.rank],
+             @"shading": self.shading,
+             @"color": self.color };
 }
 
 

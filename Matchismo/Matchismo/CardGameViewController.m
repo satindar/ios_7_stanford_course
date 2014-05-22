@@ -8,10 +8,8 @@
 
 #import "CardGameViewController.h"
 #import "PlayingCardDeck.h"
-#import "CardMatchingGame.h"
 
 @interface CardGameViewController ()
-@property (strong, nonatomic) CardMatchingGame *game;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *gameModeSegmentedControl;
@@ -38,7 +36,9 @@
 {
     int chosenButtonIndex = [self.cardButtons indexOfObject:sender];
     [self.game chooseCardAtIndex:chosenButtonIndex];
-    self.gameModeSegmentedControl.enabled = NO;
+    if (self.gameModeSegmentedControl) {
+        self.gameModeSegmentedControl.enabled = NO;
+    }
     [self updateUI];
 }
 
@@ -47,7 +47,7 @@
     for (UIButton *cardButton in self.cardButtons) {
         int cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
         Card *card = [self.game cardAtIndex:cardButtonIndex];
-        [cardButton setTitle:[self titleForCard:card] forState:UIControlStateNormal];
+        [cardButton setAttributedTitle:[self titleForCard:card] forState:UIControlStateNormal];
         [cardButton setBackgroundImage:[self backgroundImageForCard:card] forState:UIControlStateNormal];
         cardButton.enabled = !card.isMatched;
         self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
@@ -58,11 +58,11 @@
 
 - (void)updateLastMoveLabel
 {
-    self.lastMoveLabel.text = [self descriptionOfLastMove];
+    self.lastMoveLabel.attributedText = [self descriptionOfLastMove];
     self.game.lastCardsPlayed = nil;
 }
 
-- (NSString *)descriptionOfLastMove
+- (NSAttributedString *)descriptionOfLastMove
 {
     NSString *lastMoveText = @"";
     int points = self.game.pointsLastScored;
@@ -98,7 +98,7 @@
         lastMoveText = [NSString stringWithFormat:@"%@", cardsPlayed];
     }
     
-    return lastMoveText;
+    return [[NSAttributedString alloc] initWithString:lastMoveText];
 }
 
 
@@ -121,15 +121,24 @@
 
 - (IBAction)startNewGame:(UIButton *)sender
 {
+    [self newGame];
+}
+
+- (void)newGame
+{
     self.game = nil;
-    self.gameModeSegmentedControl.enabled = YES;
+    if (self.gameModeSegmentedControl) {
+        self.gameModeSegmentedControl.enabled = YES;
+    }
     self.lastMoveLabel.text = @"";
     [self updateUI];
 }
 
-- (NSString *)titleForCard:(Card *)card
+- (NSAttributedString *)titleForCard:(Card *)card
 {
-    return card.isChosen ? card.contents : @"";
+    NSString *title = card.isChosen ? card.contents : @"";
+    NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title];
+    return attributedTitle;
 }
 
 - (UIImage *)backgroundImageForCard:(Card *)card

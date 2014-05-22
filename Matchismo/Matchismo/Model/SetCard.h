@@ -15,6 +15,8 @@
 @property (strong, nonatomic) NSString *color;
 @property (nonatomic) NSUInteger rank;
 
+- (NSDictionary *)cardAttributes;
+
 + (NSArray *)validSymbols;
 + (NSArray *)validShadings;
 + (NSArray *)validColors;

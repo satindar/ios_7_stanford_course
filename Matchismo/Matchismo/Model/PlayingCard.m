@@ -65,6 +65,11 @@
     return [rankStrings[self.rank] stringByAppendingString:self.suit];
 }
 
+- (NSDictionary *)cardAttributes
+{
+    return nil;
+}
+
 @synthesize suit = _suit;
 
 
