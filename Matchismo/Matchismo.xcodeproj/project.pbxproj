@@ -30,6 +30,7 @@
 		048EAF32192B0C4900186694 /* SetGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 048EAF31192B0C4900186694 /* SetGameViewController.m */; };
 		048EAF35192B0CD800186694 /* SetCardDeck.m in Sources */ = {isa = PBXBuildFile; fileRef = 048EAF34192B0CD800186694 /* SetCardDeck.m */; };
 		048EAF39192BE6B200186694 /* SetCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 048EAF38192BE6B100186694 /* SetCard.m */; };
+		04E0AE85192DBF5E00BAB847 /* MoveHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0AE84192DBF5E00BAB847 /* MoveHistoryViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +81,8 @@
 		048EAF34192B0CD800186694 /* SetCardDeck.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetCardDeck.m; path = Model/SetCardDeck.m; sourceTree = "<group>"; };
 		048EAF37192BE6B100186694 /* SetCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetCard.h; path = Model/SetCard.h; sourceTree = "<group>"; };
 		048EAF38192BE6B100186694 /* SetCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetCard.m; path = Model/SetCard.m; sourceTree = "<group>"; };
+		04E0AE83192DBF5E00BAB847 /* MoveHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveHistoryViewController.h; sourceTree = "<group>"; };
+		04E0AE84192DBF5E00BAB847 /* MoveHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoveHistoryViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +143,8 @@
 			isa = PBXGroup;
 			children = (
 				045ACB161925C38400246CF9 /* Main.storyboard */,
+				04E0AE83192DBF5E00BAB847 /* MoveHistoryViewController.h */,
+				04E0AE84192DBF5E00BAB847 /* MoveHistoryViewController.m */,
 				045ACB191925C38400246CF9 /* CardGameViewController.h */,
 				0488BF501929243D009A369F /* PlayingCardGameViewController.h */,
 				0488BF511929243D009A369F /* PlayingCardGameViewController.m */,
@@ -311,6 +316,7 @@
 				045ACB3F1925D21C00246CF9 /* PlayingCard.m in Sources */,
 				045ACB481925EB2E00246CF9 /* CardMatchingGame.m in Sources */,
 				045ACB451925DC5E00246CF9 /* PlayingCardDeck.m in Sources */,
+				04E0AE85192DBF5E00BAB847 /* MoveHistoryViewController.m in Sources */,
 				045ACB421925DA8300246CF9 /* Deck.m in Sources */,
 				045ACB3B1925D09400246CF9 /* Card.m in Sources */,
 				0488BF521929243D009A369F /* PlayingCardGameViewController.m in Sources */,

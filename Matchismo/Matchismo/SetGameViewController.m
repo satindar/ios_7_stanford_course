@@ -101,7 +101,7 @@
 - (NSAttributedString *)descriptionOfLastMove
 {
     NSMutableAttributedString *lastMoveText = [[NSMutableAttributedString alloc] initWithString:@"Hello and Welcome to Set!"];
-//    int points = self.game.pointsLastScored;
+    int points = self.game.pointsLastScored;
     NSMutableAttributedString *cardsPlayed = [[NSMutableAttributedString alloc] init];
     NSMutableArray *cards = self.game.lastCardsPlayed;
     
@@ -114,24 +114,27 @@
         }
     }
     
-//    NSString *pointDescriptionText = @"points";
-//    if (points == 1 || points == -1) {
-//        pointDescriptionText = @"point";
-//    }
-//    
-//    if ([cards count] == self.game.cardsToMatchInCurrentGameMode) {
-//        if (points < 0) {
-//            points = points * -1;
-//            lastMoveText = [NSString stringWithFormat:@"%@ do not match! %d point penalty.", cardsPlayed, points];
-//        } else if (points > 0) {
-//            lastMoveText = [NSString stringWithFormat:@"Matched %@ for %d %@!", cardsPlayed, points, pointDescriptionText];
-//        } else {
-//            lastMoveText = [NSString stringWithFormat:@"No points earned for %@.", cardsPlayed];
-//        }
-//    } else if (points <= 0 && [cards count] > 0){
-//        points = points * -1;
-//        lastMoveText = [NSString stringWithFormat:@"%@", cardsPlayed];
-//    }
+    NSString *pointDescriptionText = @"points";
+    if (points == 1 || points == -1) {
+        pointDescriptionText = @"points";
+    }
+    
+    if ([cards count] == self.game.cardsToMatchInCurrentGameMode) {
+        if (points < 0) {
+            points = points * -1;
+            NSString *textToAppend = [NSString stringWithFormat:@" do not form a set! %d point penalty.", points];
+            [cardsPlayed appendAttributedString:[[NSMutableAttributedString alloc] initWithString:textToAppend]];
+        } else if (points > 0) {
+            NSString *textToAppend = [NSString stringWithFormat:@" form a set! you earned %d %@!", points, pointDescriptionText];
+            [cardsPlayed appendAttributedString:[[NSMutableAttributedString alloc] initWithString:textToAppend]];
+        } else {
+            NSString *textToAppend = [NSString stringWithFormat:@". No points earned."];
+            [cardsPlayed appendAttributedString:[[NSMutableAttributedString alloc] initWithString:textToAppend]];
+        }
+    } else if (points <= 0 && [cards count] > 0){
+        points = points * -1;
+        lastMoveText = cardsPlayed;
+    }
     
     return cardsPlayed;
 }

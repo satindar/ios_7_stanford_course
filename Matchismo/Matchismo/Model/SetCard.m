@@ -23,19 +23,17 @@
 {
     int score = 0;
     
-    for (SetCard *card in otherCards) {
-        if ([self card:(SetCard *)card createsSetWithOtherCards:(NSArray *)otherCards]) {
-            score = 1;
-        }
+    if ([self createsSetWithOtherCards:(NSArray *)otherCards]) {
+        score = 1;
     }
     
     return score;
 }
 
-- (BOOL)card:(SetCard *)card createsSetWithOtherCards:(NSArray *)otherCards
+- (BOOL)createsSetWithOtherCards:(NSArray *)otherCards
 {
     NSMutableArray *allCards = [[NSMutableArray alloc] initWithArray:otherCards];
-    [allCards addObject:card];
+    [allCards addObject:self];
 
     if ([self cardAttributesSatisfySetConditions:[allCards valueForKeyPath:@"symbol"]] &&
         [self cardAttributesSatisfySetConditions:[allCards valueForKeyPath:@"shading"]] &&
@@ -131,7 +129,5 @@
              @"shading": self.shading,
              @"color": self.color };
 }
-
-
 
 @end

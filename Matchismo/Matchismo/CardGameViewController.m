@@ -8,12 +8,15 @@
 
 #import "CardGameViewController.h"
 #import "PlayingCardDeck.h"
+#import "MoveHistoryViewController.h"
 
 @interface CardGameViewController ()
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *gameModeSegmentedControl;
 @property (weak, nonatomic) IBOutlet UILabel *lastMoveLabel;
+@property (strong, nonatomic) NSMutableArray *moveHistory;
+//@property (weak, nonatomic) 
 
 @end
 
@@ -25,6 +28,12 @@
                                                           usingDeck:[self createDeck]
                                           cardsToMatchInCurrentMode:[self numberOfCardsToMatch]];
     return _game;
+}
+
+- (NSMutableArray *)moveHistory
+{
+    if (!_moveHistory) _moveHistory = [[NSMutableArray alloc] init];
+    return _moveHistory;
 }
 
 - (Deck *)createDeck // abstract
@@ -58,7 +67,9 @@
 
 - (void)updateLastMoveLabel
 {
-    self.lastMoveLabel.attributedText = [self descriptionOfLastMove];
+    NSAttributedString *lastMove = [self descriptionOfLastMove];
+    self.lastMoveLabel.attributedText = lastMove;
+    [self.moveHistory addObject:lastMove];
     self.game.lastCardsPlayed = nil;
 }
 
@@ -144,6 +155,16 @@
 - (UIImage *)backgroundImageForCard:(Card *)card
 {
     return [UIImage imageNamed:card.isChosen ? @"cardfront" : @"cardback"];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"history"]) {
+        if ([segue.destinationViewController isKindOfClass:[MoveHistoryViewController class]]) {
+            MoveHistoryViewController *mhvc = (MoveHistoryViewController *)segue.destinationViewController;
+            mhvc.historyOfMoves = self.moveHistory;
+        }
+    }
 }
 
 @end
