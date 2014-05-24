@@ -56,14 +56,14 @@
     }
 }
 
-- (void)pinch:(UIPinchGestureRecognizer *)gesture
-{
-    if ((gesture.state == UIGestureRecognizerStateChanged) ||
-        (gesture.state == UIGestureRecognizerStateEnded)) {
-        self.faceCardScaleFactor *= gesture.scale;
-        gesture.scale = 1.0;
-    }
-}
+//- (void)pinch:(UIPinchGestureRecognizer *)gesture
+//{
+//    if ((gesture.state == UIGestureRecognizerStateChanged) ||
+//        (gesture.state == UIGestureRecognizerStateEnded)) {
+//        self.faceCardScaleFactor *= gesture.scale;
+//        gesture.scale = 1.0;
+//    }
+//}
 
 #pragma mark - Drawing
 
@@ -80,10 +80,10 @@
     // Drawing code
     UIBezierPath *roundedRect =
         [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:[self cornerRadius]];
-    [roundedRect addClip];
+    [roundedRect addClip]; // never draw outside the rounded rect
     
-    [[UIColor whiteColor] setFill];
-    UIRectFill(self.bounds);
+    [[UIColor whiteColor] setFill]; // possible because of clip
+    UIRectFill(self.bounds); // C function (fils rect). Use initWithFrame to set alpha and stop backgournd from being white. also in awakeFromNib
     
     [[UIColor blackColor] setStroke];
     [roundedRect stroke];
@@ -136,7 +136,7 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextTranslateCTM(context, self.bounds.size.width, self.bounds.size.height);
     CGContextRotateCTM(context, M_PI);
-    [cornerText drawInRect:textBounds];
+    [cornerText drawAtPoint:self.center];
 }
 
 #pragma mark - Initialization
@@ -148,7 +148,7 @@
     self.contentMode = UIViewContentModeRedraw;
 }
 
-- (void)awakeFromNib // called when coming out of
+- (void)awakeFromNib // called when coming out of storyboard
 {
     [self setup];
 }

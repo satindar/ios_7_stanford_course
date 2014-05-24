@@ -31,6 +31,9 @@
 		048EAF35192B0CD800186694 /* SetCardDeck.m in Sources */ = {isa = PBXBuildFile; fileRef = 048EAF34192B0CD800186694 /* SetCardDeck.m */; };
 		048EAF39192BE6B200186694 /* SetCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 048EAF38192BE6B100186694 /* SetCard.m */; };
 		04E0AE85192DBF5E00BAB847 /* MoveHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0AE84192DBF5E00BAB847 /* MoveHistoryViewController.m */; };
+		04E0AE881930509C00BAB847 /* PlayingCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0AE871930509C00BAB847 /* PlayingCardView.m */; };
+		04E0AE8C193050E400BAB847 /* SetCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0AE8B193050E400BAB847 /* SetCardView.m */; };
+		04E0AE8F1930559800BAB847 /* DeleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0AE8E1930559800BAB847 /* DeleteViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +86,12 @@
 		048EAF38192BE6B100186694 /* SetCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetCard.m; path = Model/SetCard.m; sourceTree = "<group>"; };
 		04E0AE83192DBF5E00BAB847 /* MoveHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveHistoryViewController.h; sourceTree = "<group>"; };
 		04E0AE84192DBF5E00BAB847 /* MoveHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoveHistoryViewController.m; sourceTree = "<group>"; };
+		04E0AE861930509B00BAB847 /* PlayingCardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayingCardView.h; path = ../../SuperCard/SuperCard/PlayingCardView.h; sourceTree = "<group>"; };
+		04E0AE871930509C00BAB847 /* PlayingCardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayingCardView.m; path = ../../SuperCard/SuperCard/PlayingCardView.m; sourceTree = "<group>"; };
+		04E0AE8A193050E400BAB847 /* SetCardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetCardView.h; sourceTree = "<group>"; };
+		04E0AE8B193050E400BAB847 /* SetCardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetCardView.m; sourceTree = "<group>"; };
+		04E0AE8D1930559800BAB847 /* DeleteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteViewController.h; sourceTree = "<group>"; };
+		04E0AE8E1930559800BAB847 /* DeleteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +160,9 @@
 				048EAF30192B0C4900186694 /* SetGameViewController.h */,
 				048EAF31192B0C4900186694 /* SetGameViewController.m */,
 				045ACB1A1925C38400246CF9 /* CardGameViewController.m */,
+				04E0AE8D1930559800BAB847 /* DeleteViewController.h */,
+				04E0AE8E1930559800BAB847 /* DeleteViewController.m */,
+				04E0AE89193050B500BAB847 /* Views */,
 				045ACB3C1925D0D600246CF9 /* Model */,
 				045ACB1C1925C38400246CF9 /* Images.xcassets */,
 				045ACB0B1925C38400246CF9 /* Supporting Files */,
@@ -208,6 +220,17 @@
 				045ACB3E1925D21C00246CF9 /* PlayingCard.m */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		04E0AE89193050B500BAB847 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				04E0AE861930509B00BAB847 /* PlayingCardView.h */,
+				04E0AE8A193050E400BAB847 /* SetCardView.h */,
+				04E0AE8B193050E400BAB847 /* SetCardView.m */,
+				04E0AE871930509C00BAB847 /* PlayingCardView.m */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -311,14 +334,17 @@
 				045ACB151925C38400246CF9 /* CardGameAppDelegate.m in Sources */,
 				045ACB1B1925C38400246CF9 /* CardGameViewController.m in Sources */,
 				048EAF39192BE6B200186694 /* SetCard.m in Sources */,
+				04E0AE8F1930559800BAB847 /* DeleteViewController.m in Sources */,
 				045ACB111925C38400246CF9 /* main.m in Sources */,
 				048EAF35192B0CD800186694 /* SetCardDeck.m in Sources */,
 				045ACB3F1925D21C00246CF9 /* PlayingCard.m in Sources */,
 				045ACB481925EB2E00246CF9 /* CardMatchingGame.m in Sources */,
 				045ACB451925DC5E00246CF9 /* PlayingCardDeck.m in Sources */,
 				04E0AE85192DBF5E00BAB847 /* MoveHistoryViewController.m in Sources */,
+				04E0AE8C193050E400BAB847 /* SetCardView.m in Sources */,
 				045ACB421925DA8300246CF9 /* Deck.m in Sources */,
 				045ACB3B1925D09400246CF9 /* Card.m in Sources */,
+				04E0AE881930509C00BAB847 /* PlayingCardView.m in Sources */,
 				0488BF521929243D009A369F /* PlayingCardGameViewController.m in Sources */,
 				048EAF32192B0C4900186694 /* SetGameViewController.m in Sources */,
 			);
