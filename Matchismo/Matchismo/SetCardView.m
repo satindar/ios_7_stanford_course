@@ -76,33 +76,50 @@
 
 - (void)drawSymbolsWithAttributes
 {
-    NSLog(@"%@", self.symbol);
     UIImage *cardImage;
     if ([self.symbol isEqualToString:@"triangle"]) {
         cardImage = [self triangleImage];
-    } else if ([self.symbol isEqualToString:@"square"]) {
-//        cardImage = [self circleImage];
     } else if ([self.symbol isEqualToString:@"circle"]) {
-//        cardImage = [self squareImage];
+        cardImage = [self circleImage];
+    } else if ([self.symbol isEqualToString:@"square"]) {
+        cardImage = [self squareImage];
     }
-    CGRect imageRect = CGRectInset(self.bounds,
-                                   self.bounds.size.width * 0.9,
-                                   self.bounds.size.height * 0.9);
-    [cardImage drawInRect:self.bounds];
+    
+    float hfactor = cardImage.size.width / self.bounds.size.width;
+    float vfactor = cardImage.size.height / self.bounds.size.height;
+    
+    float factor = fmax(hfactor, vfactor);
+    
+    // Divide the size by the greater of the vertical or horizontal shrinkage factor
+    float newWidth = cardImage.size.width / factor;
+    float newHeight = cardImage.size.height / factor;
+    
+    // Then figure out if you need to offset it to center vertically or horizontally
+    float leftOffset = (self.bounds.size.width - newWidth) / 2;
+    float topOffset = (self.bounds.size.height - newHeight) / 2;
+    
+    CGRect imageRect = CGRectMake(leftOffset, topOffset, newWidth, newHeight);
+
+    [cardImage drawInRect:imageRect];
     
 }
 
 - (UIImage *)triangleImage
 {
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(650, 200), NO, 1.0);
+    int triangleWidth = 150;
+    int kerning = 25;
+    int xOffset = 10;
+    int imageHeight = 200;
+    int width = triangleWidth * self.numberOfSymbolsToDisplay + kerning * (self.numberOfSymbolsToDisplay - 1) + (xOffset * 2);
+    UIGraphicsBeginImageContext(CGSizeMake(width, imageHeight));
     UIBezierPath *trianglePath = [[UIBezierPath alloc] init];
-    int xPosition = 10;
+    int xPosition = xOffset;
     for (int i = 0; i < self.numberOfSymbolsToDisplay; i++) {
         [trianglePath moveToPoint:CGPointMake(xPosition, 150)];
-        [trianglePath addLineToPoint:CGPointMake(xPosition + 150, 150)];
-        [trianglePath addLineToPoint:CGPointMake(xPosition + 65, 10)];
+        [trianglePath addLineToPoint:CGPointMake(xPosition + triangleWidth, 150)];
+        [trianglePath addLineToPoint:CGPointMake(xPosition + (triangleWidth / 2), 10)];
         [trianglePath closePath];
-        xPosition += 200;
+        xPosition += triangleWidth + kerning;
        
         [self strokeAndFillShape:trianglePath];
     }
@@ -111,18 +128,78 @@
     return image;
 }
 
+- (UIImage *)circleImage
+{
+    int circleRadius = 150;
+    int kerning = 25;
+    int xOffset = 10;
+    int imageHeight = 200;
+    int yOffset = (imageHeight - circleRadius) / 2;
+    int width = circleRadius * self.numberOfSymbolsToDisplay + kerning * (self.numberOfSymbolsToDisplay - 1) + (xOffset * 2);
+    
+    UIGraphicsBeginImageContext(CGSizeMake(width, imageHeight));
+    
+    for (int i = 0; i < self.numberOfSymbolsToDisplay; i++) {
+        CGRect imageRect = CGRectMake(xOffset, yOffset, circleRadius, circleRadius);
+        UIBezierPath *circlePath = [UIBezierPath bezierPathWithOvalInRect:imageRect];
+        xOffset += circleRadius + kerning;
+        
+        [self strokeAndFillShape:circlePath];
+    }
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
+- (UIImage *)squareImage
+{
+    int edgeLength = 100;
+    int kerning = 25;
+    int xOffset = 25;
+    int imageHeight = 200;
+    int yOffset = (imageHeight - edgeLength) / 2;
+    int width = edgeLength * self.numberOfSymbolsToDisplay + kerning * (self.numberOfSymbolsToDisplay - 1) + (xOffset * 2);
+    
+    UIGraphicsBeginImageContext(CGSizeMake(width, imageHeight));
+    
+    for (int i = 0; i < self.numberOfSymbolsToDisplay; i++) {
+        CGRect imageRect = CGRectMake(xOffset, yOffset, edgeLength, edgeLength);
+        UIBezierPath *squarePath = [UIBezierPath bezierPathWithRect:imageRect];
+        xOffset += edgeLength + kerning;
+        
+        [self strokeAndFillShape:squarePath];
+    }
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
 
 - (void)strokeAndFillShape:(UIBezierPath *)shape
 {
-    UIColor *color = [UIColor purpleColor]; // use case statement here for different
+    shape.lineWidth = 5;
+    
+    UIColor *color;
+    if ([self.color isEqualToString:@"purple"]) {
+        color = [UIColor purpleColor];
+    } else if ([self.color isEqualToString:@"red"]) {
+        color = [UIColor redColor];
+    } else if ([self.color isEqualToString:@"green"]) {
+        color = [UIColor greenColor];
+    }
+    
     [color setFill];
-    [[UIColor blackColor] setStroke];
-    [shape fill];
-    [shape stroke];
-    //do other stuff here
+    [color setStroke];
+    
+    if ([self.shading isEqualToString:@"solid"]) {
+        [shape fill];
+    } else if ([self.shading isEqualToString:@"unfilled"]) {
+        shape.lineWidth = 5;
+        [shape stroke];
+    } else if ([self.color isEqualToString:@"striped"]) {
+        // stripe it
+    }
+    
 }
-
-
 
 
 #pragma mark - Initialization
