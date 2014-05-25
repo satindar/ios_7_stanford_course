@@ -178,6 +178,7 @@
 {
     shape.lineWidth = 5;
     
+    
     UIColor *color;
     if ([self.color isEqualToString:@"purple"]) {
         color = [UIColor purpleColor];
@@ -195,12 +196,34 @@
     } else if ([self.shading isEqualToString:@"unfilled"]) {
         shape.lineWidth = 5;
         [shape stroke];
-    } else if ([self.color isEqualToString:@"striped"]) {
-        // stripe it
+    } else if ([self.shading isEqualToString:@"striped"]) {
+        UIImage *backgroundImage = [self createImageWithStripedBackground:shape withColor:color];
+        [[UIColor colorWithPatternImage:backgroundImage] setFill];
+        [shape fill];
+        shape.lineWidth = 5;
+        [shape stroke];
     }
     
 }
 
+- (UIImage *)createImageWithStripedBackground:(UIBezierPath *)shape withColor:(UIColor *)color
+{
+    UIGraphicsBeginImageContext(CGSizeMake(shape.bounds.size.width, shape.bounds.size.height));
+    float stripeHeight = shape.bounds.size.height / 15.0;
+    float stripeWidth = shape.bounds.size.width;
+    float yOffset = 0.0;
+    
+    for (int i = 0; i < 15; i += 2) {
+        UIBezierPath *stripe =
+            [UIBezierPath bezierPathWithRect:CGRectMake(0, yOffset, stripeWidth, stripeHeight)];
+        [color setFill];
+        [stripe fill];
+        yOffset += 2 * stripeHeight;
+    }
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
 
 #pragma mark - Initialization
 

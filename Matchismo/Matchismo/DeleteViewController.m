@@ -20,10 +20,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.setCardView.symbol = @"square";
-    self.setCardView.shading = @"unfilled";
+    self.setCardView.symbol = @"circle";
+    self.setCardView.shading = @"striped";
     self.setCardView.color = @"purple";
-    self.setCardView.numberOfSymbolsToDisplay = 3;
+    self.setCardView.numberOfSymbolsToDisplay = 2;
 }
 
 @end
