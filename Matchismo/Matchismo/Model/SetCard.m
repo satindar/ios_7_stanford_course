@@ -15,10 +15,6 @@
     return nil;
 }
 
-@synthesize symbol = _symbol;
-@synthesize shading = _shading;
-@synthesize color = _color;
-
 - (int)match:(NSArray *)otherCards
 {
     int score = 0;
@@ -54,56 +50,6 @@
     return NO;
 }
 
-+ (NSArray *)validSymbols
-{
-    return @[@"▲", @"●", @"■"];
-}
-
-+ (NSArray *)validShadings
-{
-    return @[@"open", @"solid", @"outlined"];
-}
-
-+ (NSArray *)validColors
-{
-    return @[@"red", @"green", @"purple"];
-}
-
-- (NSString *)symbol
-{
-    return _symbol ? _symbol : @"?";
-}
-
-- (void)setSymbol:(NSString *)symbol
-{
-    if ([[SetCard validSymbols] containsObject:symbol]) {
-        _symbol = symbol;
-    }
-}
-
-- (NSString *)shading
-{
-    return _shading ? _shading : @"?";
-}
-
-- (void)setShading:(NSString *)shading
-{
-    if ([[SetCard validShadings] containsObject:shading]) {
-        _shading = shading;
-    }
-}
-
-- (NSString *)color
-{
-    return _color ? _color : @"?";
-}
-
-- (void)setColor:(NSString *)color
-{
-    if ([[SetCard validColors] containsObject:color]) {
-        _color = color;
-    }
-}
 
 + (NSArray *)rankStrings
 {
@@ -122,12 +68,33 @@
     }
 }
 
+- (void)setSymbol:(NSUInteger)symbol
+{
+    if (symbol <= [SetCard maxRank]) {
+        _symbol = symbol;
+    }
+}
+
+- (void)setShading:(NSUInteger)shading
+{
+    if (shading <= [SetCard maxRank]) {
+        _shading = shading;
+    }
+}
+
+- (void)setColor:(NSUInteger)color
+{
+    if (color <= [SetCard maxRank]) {
+        _color = color;
+    }
+}
+
 - (NSDictionary *)cardAttributes
 {
-    return @{@"symbol": self.symbol,
+    return @{@"symbol": [SetCard rankStrings][self.symbol],
              @"rank": [SetCard rankStrings][self.rank],
-             @"shading": self.shading,
-             @"color": self.color };
+             @"shading": [SetCard rankStrings][self.shading],
+             @"color": [SetCard rankStrings][self.color] };
 }
 
 @end
