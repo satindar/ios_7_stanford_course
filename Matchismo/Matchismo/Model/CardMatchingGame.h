@@ -25,5 +25,8 @@
 - (void)chooseCardAtIndex:(NSInteger)index;
 - (Card *)cardAtIndex:(NSUInteger)index;
 
+- (void)addCardsIntoPlay:(NSUInteger)numberOfCardsToAdd;
+- (NSUInteger)numberOfCardsInPlay;
+
 
 @end
