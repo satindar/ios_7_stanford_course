@@ -17,6 +17,7 @@
 @property (nonatomic) CGSize maxCardSize;
 @property (nonatomic) NSInteger initialCardCount;
 @property (nonatomic) NSInteger numberOfCardsToMatch;
+@property (nonatomic) NSInteger maxNumberOfCardsOnScreen;
 
 - (void)newGame;
 

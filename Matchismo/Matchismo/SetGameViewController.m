@@ -55,6 +55,7 @@
     self.maxCardSize = CGSizeMake(300, 200);
     self.initialCardCount = 12;
     self.numberOfCardsToMatch = 3;
+    self.maxNumberOfCardsOnScreen = 21;
     [self newGame];
 }
 

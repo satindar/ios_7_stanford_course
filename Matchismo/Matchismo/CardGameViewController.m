@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (strong, nonatomic) Grid *grid;
 @property (weak, nonatomic) IBOutlet UIView *gridView;
+@property (weak, nonatomic) IBOutlet UIButton *addThreeCardsButton;
 
 @end
 
@@ -34,7 +35,7 @@
         _grid = [[Grid alloc] init];
         _grid.size = self.gridView.frame.size;
         _grid.cellAspectRatio = self.maxCardSize.width /self.maxCardSize.height;
-        _grid.minimumNumberOfCells = self.initialCardCount;
+        _grid.minimumNumberOfCells = self.initialCardCount * 1.5;
     }
     
     return _grid;
@@ -85,6 +86,12 @@
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
     
+    if ([[self.gridView subviews] count] > self.maxNumberOfCardsOnScreen - 2) {
+        self.addThreeCardsButton.enabled = NO;
+    } else {
+        self.addThreeCardsButton.enabled = YES;
+    }
+    
 }
 
 
@@ -97,6 +104,7 @@
             if (![self pointContainsCardSubview:centerPointOfFrame]) {
                 frame = [self.grid frameOfCellAtRow:row inColumn:column];
                 frame = CGRectInset(frame, frame.size.width * 0.1, frame.size.height * 0.1);
+                return frame;
             }
         }
     }
@@ -119,10 +127,16 @@
 {
     [self newGame];
 }
+- (IBAction)addThreeCardsToPlay:(UIButton *)sender
+{
+    [self.game addCardsIntoPlay:3];
+    [self updateUI];
+}
 
 - (void)newGame
 {
     self.game = nil;
+    [[self.gridView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self updateUI];
 }
 
