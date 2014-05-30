@@ -46,7 +46,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.maxCardSize = CGSizeMake(300, 200);
+    self.maxCardSize = CGSizeMake(450, 300);
     self.initialCardCount = 12;
     self.numberOfCardsToMatch = 3;
     self.maxNumberOfCardsOnScreen = 21;

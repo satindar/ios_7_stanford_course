@@ -73,7 +73,7 @@
             [self.gridView addSubview:cardView];
         } else {
             if (card.isMatched) {
-                [cardView removeFromSuperview];
+                [self removeViewWithAnimation:cardView];
             } else {
                 [self updateChosenProperty:card.isChosen forCardView:cardView];
             }
@@ -89,6 +89,20 @@
     
 }
 
+- (void)removeViewWithAnimation:(UIView *)view
+{
+    [UIView animateWithDuration:1.0
+                          delay:0.0
+                        options:UIViewAnimationOptionBeginFromCurrentState
+                     animations:^{ view.alpha = 0.0; }
+                     completion:^(BOOL finished) {
+                         if (finished) {
+                             [view removeFromSuperview];
+                         }
+                     }
+     ];
+}
+
 
 - (CGRect)frameForFirstAvailableSpotInGrid:(Grid *)grid
 {
@@ -98,7 +112,7 @@
             CGPoint centerPointOfFrame = [grid centerOfCellAtRow:row inColumn:column];
             if (![self pointContainsCardSubview:centerPointOfFrame]) {
                 frame = [self.grid frameOfCellAtRow:row inColumn:column];
-                frame = CGRectInset(frame, frame.size.width * 0.1, frame.size.height * 0.1);
+                frame = CGRectInset(frame, frame.size.width * 0.1, frame.size.height * 0.1); // something is fishy here hmmmm...
                 return frame;
             }
         }
@@ -122,6 +136,7 @@
 {
     [self newGame];
 }
+
 - (IBAction)addThreeCardsToPlay:(UIButton *)sender
 {
     [self.game addCardsIntoPlay:3];
@@ -131,9 +146,24 @@
 - (void)newGame
 {
     self.game = nil;
-    [[self.gridView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [self updateUI];
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionBeginFromCurrentState
+                     animations:^{
+                         for (UIView *cardView in [self.gridView subviews]) {
+                             cardView.alpha = 0.0;
+                         }
+                     }
+                     completion:^(BOOL finished) {
+                         if (finished) {
+                             [[self.gridView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                             [self updateUI];
+                         }
+                     }
+     ];
 }
+
+
 
 
 - (void)touchCard:(UITapGestureRecognizer *)gesture
