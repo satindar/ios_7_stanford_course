@@ -16,10 +16,10 @@
     self = [super init];
     
     if (self) {
-        for (NSString *symbol in [SetCard validSymbols]) {
+        for (NSUInteger symbol = 1; symbol <= 3; symbol++) {
             for (NSUInteger rank = 1; rank <= 3; rank++) {
-                for (NSString *color in [SetCard validColors]) {
-                    for (NSString *shading in [SetCard validShadings]) {
+                for (NSUInteger color = 1; color <= 3; color++) {
+                    for (NSUInteger shading = 1; shading <= 3; shading++) {
                         SetCard *card = [[SetCard alloc] init];
                         card.symbol = symbol;
                         card.rank = rank;

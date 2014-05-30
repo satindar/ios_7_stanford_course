@@ -20,9 +20,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.setCardView.symbol = @"circle";
-    self.setCardView.shading = @"striped";
-    self.setCardView.color = @"purple";
+    self.setCardView.symbol = 1;
+    self.setCardView.shading = 2;
+    self.setCardView.color = 3;
     self.setCardView.numberOfSymbolsToDisplay = 2;
 }
 

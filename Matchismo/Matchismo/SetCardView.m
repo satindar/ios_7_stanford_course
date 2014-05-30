@@ -12,7 +12,7 @@
 
 #pragma mark - Properties
 
-- (void)setSymbol:(NSString *)symbol
+- (void)setSymbol:(NSUInteger)symbol
 {
     if (_symbol != symbol) {
         _symbol = symbol;
@@ -20,7 +20,7 @@
     }
 }
 
-- (void)setShading:(NSString *)shading
+- (void)setShading:(NSUInteger)shading
 {
     if (_shading != shading) {
         _shading = shading;
@@ -28,7 +28,7 @@
     }
 }
 
-- (void)setColor:(NSString *)color
+- (void)setColor:(NSUInteger)color
 {
     if (_color != color) {
         _color = color;
@@ -65,7 +65,12 @@
     UIBezierPath *roundedRect =[UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:[self cornerRadius]];
     [roundedRect addClip]; // never draw outside the rounded rect
     
-    [[UIColor whiteColor] setFill];
+    if (self.isChosen) {
+        [[UIColor lightGrayColor] setFill];
+    } else {
+        [[UIColor whiteColor] setFill];
+    }
+    
     UIRectFill(self.bounds);
     
     [[UIColor blackColor] setStroke];
@@ -77,11 +82,11 @@
 - (void)drawSymbolsWithAttributes
 {
     UIImage *cardImage;
-    if ([self.symbol isEqualToString:@"triangle"]) {
+    if (self.symbol == 1) {
         cardImage = [self triangleImage];
-    } else if ([self.symbol isEqualToString:@"circle"]) {
+    } else if (self.symbol == 2) {
         cardImage = [self circleImage];
-    } else if ([self.symbol isEqualToString:@"square"]) {
+    } else if (self.symbol == 3) {
         cardImage = [self squareImage];
     }
     
@@ -180,23 +185,23 @@
     
     
     UIColor *color;
-    if ([self.color isEqualToString:@"purple"]) {
+    if (self.color == 1) {
         color = [UIColor purpleColor];
-    } else if ([self.color isEqualToString:@"red"]) {
+    } else if (self.color == 2) {
         color = [UIColor redColor];
-    } else if ([self.color isEqualToString:@"green"]) {
+    } else if (self.color == 3) {
         color = [UIColor greenColor];
     }
     
     [color setFill];
     [color setStroke];
     
-    if ([self.shading isEqualToString:@"solid"]) {
+    if (self.shading == 1) {
         [shape fill];
-    } else if ([self.shading isEqualToString:@"unfilled"]) {
+    } else if (self.shading == 2) {
         shape.lineWidth = 5;
         [shape stroke];
-    } else if ([self.shading isEqualToString:@"striped"]) {
+    } else if (self.shading == 3) {
         UIImage *backgroundImage = [self createImageWithStripedBackground:shape withColor:color];
         [[UIColor colorWithPatternImage:backgroundImage] setFill];
         [shape fill];

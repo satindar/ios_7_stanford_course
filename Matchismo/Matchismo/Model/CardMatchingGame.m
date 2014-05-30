@@ -11,6 +11,7 @@
 @interface CardMatchingGame()
 @property (nonatomic, readwrite) NSInteger score;
 @property (nonatomic, strong) NSMutableArray *cards; // of Card
+@property (nonatomic, strong) Deck *deck;
 @end
 
 @implementation CardMatchingGame
@@ -31,6 +32,11 @@ static const int COST_TO_CHOOSE = 1;
     return _lastCardsPlayed;
 }
 
+- (NSUInteger)numberOfCardsDealt
+{
+    return [self.cards count];
+}
+
 - (instancetype)initWithCardCount:(NSUInteger)count
                         usingDeck:(Deck *)deck
         cardsToMatchInCurrentMode:(NSUInteger)numberOfCards
@@ -48,9 +54,22 @@ static const int COST_TO_CHOOSE = 1;
             }
         }
         self.cardsToMatchInCurrentGameMode = numberOfCards;
+        self.deck = deck;
     }
     
     return self;
+}
+
+- (void)addCardsIntoPlay:(NSUInteger)numberOfCardsToAdd
+{
+    for (int i = 0; i < numberOfCardsToAdd; i++) {
+        Card *card = [self.deck drawRandomCard];
+        if (card) {
+            [self.cards addObject:card];
+        } else {
+            break;
+        }
+    }
 }
 
 - (Card *)cardAtIndex:(NSUInteger)index

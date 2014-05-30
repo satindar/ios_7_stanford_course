@@ -13,7 +13,10 @@
 
 @interface CardGameViewController : UIViewController
 
-@property (strong, nonatomic) CardMatchingGame *game;
+@property (strong, nonatomic) CardMatchingGame *game; // should be private?
+@property (nonatomic) CGSize maxCardSize;
+@property (nonatomic) NSInteger initialCardCount;
+@property (nonatomic) NSInteger numberOfCardsToMatch;
 
 - (void)newGame;
 

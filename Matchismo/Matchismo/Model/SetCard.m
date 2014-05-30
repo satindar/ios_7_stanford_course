@@ -15,10 +15,6 @@
     return nil;
 }
 
-@synthesize symbol = _symbol;
-@synthesize shading = _shading;
-@synthesize color = _color;
-
 - (int)match:(NSArray *)otherCards
 {
     int score = 0;
@@ -54,65 +50,15 @@
     return NO;
 }
 
-+ (NSArray *)validSymbols
-{
-    return @[@"▲", @"●", @"■"];
-}
 
-+ (NSArray *)validShadings
-{
-    return @[@"open", @"solid", @"outlined"];
-}
-
-+ (NSArray *)validColors
-{
-    return @[@"red", @"green", @"purple"];
-}
-
-- (NSString *)symbol
-{
-    return _symbol ? _symbol : @"?";
-}
-
-- (void)setSymbol:(NSString *)symbol
-{
-    if ([[SetCard validSymbols] containsObject:symbol]) {
-        _symbol = symbol;
-    }
-}
-
-- (NSString *)shading
-{
-    return _shading ? _shading : @"?";
-}
-
-- (void)setShading:(NSString *)shading
-{
-    if ([[SetCard validShadings] containsObject:shading]) {
-        _shading = shading;
-    }
-}
-
-- (NSString *)color
-{
-    return _color ? _color : @"?";
-}
-
-- (void)setColor:(NSString *)color
-{
-    if ([[SetCard validColors] containsObject:color]) {
-        _color = color;
-    }
-}
-
-+ (NSArray *)rankStrings
++ (NSArray *)attributeStrings
 {
     return @[@"?", @"1", @"2", @"3"];
 }
 
 + (NSUInteger)maxRank
 {
-    return [[self rankStrings] count] - 1;
+    return [[self attributeStrings] count] - 1;
 }
 
 - (void)setRank:(NSUInteger)rank
@@ -122,12 +68,33 @@
     }
 }
 
+- (void)setSymbol:(NSUInteger)symbol
+{
+    if (symbol <= [SetCard maxRank]) {
+        _symbol = symbol;
+    }
+}
+
+- (void)setShading:(NSUInteger)shading
+{
+    if (shading <= [SetCard maxRank]) {
+        _shading = shading;
+    }
+}
+
+- (void)setColor:(NSUInteger)color
+{
+    if (color <= [SetCard maxRank]) {
+        _color = color;
+    }
+}
+
 - (NSDictionary *)cardAttributes
 {
-    return @{@"symbol": self.symbol,
-             @"rank": [SetCard rankStrings][self.rank],
-             @"shading": self.shading,
-             @"color": self.color };
+    return @{@"symbol": [SetCard attributeStrings][self.symbol],
+             @"rank": [SetCard attributeStrings][self.rank],
+             @"shading": [SetCard attributeStrings][self.shading],
+             @"color": [SetCard attributeStrings][self.color] };
 }
 
 @end
