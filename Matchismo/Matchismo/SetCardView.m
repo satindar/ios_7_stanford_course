@@ -65,7 +65,12 @@
     UIBezierPath *roundedRect =[UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:[self cornerRadius]];
     [roundedRect addClip]; // never draw outside the rounded rect
     
-    [[UIColor whiteColor] setFill];
+    if (self.isChosen) {
+        [[UIColor lightGrayColor] setFill];
+    } else {
+        [[UIColor whiteColor] setFill];
+    }
+    
     UIRectFill(self.bounds);
     
     [[UIColor blackColor] setStroke];

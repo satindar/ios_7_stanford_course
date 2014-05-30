@@ -37,41 +37,27 @@
     return cardView;
 }
 
+- (void)toggleChosenProperty:(UIView *)cardView
+{
+    SetCardView *setCardView = (SetCardView *)cardView;
+    setCardView.isChosen = !setCardView.isChosen;
+}
+
+- (void)updateChosenProperty:(BOOL)cardIsChosen forCardView:(UIView *)cardView
+{
+    SetCardView *setCardView = (SetCardView *)cardView;
+    setCardView.isChosen = cardIsChosen;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.maxCardSize = CGSizeMake(60, 40);
+    self.maxCardSize = CGSizeMake(300, 200);
     self.initialCardCount = 12;
     self.numberOfCardsToMatch = 3;
     [self newGame];
 }
 
-- (UIImage *)backgroundImageForCard:(Card *)card // move to view
-{
-    UIImage *cardBackground = [UIImage imageNamed:@"cardfront"];
-    if (card.isChosen) {
-        cardBackground = [SetGameViewController imageWithColor:[UIColor yellowColor]
-                                                       andSize:cardBackground.size];
-    }
-    return cardBackground;
-}
-
-+ (UIImage *)imageWithColor:(UIColor *)color andSize:(CGSize)size // move to view
-{
-    UIImage *img = nil;
-    
-    CGRect rect = CGRectMake(0, 0, size.width, size.height);
-    UIGraphicsBeginImageContext(rect.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(context,
-                                   color.CGColor);
-    CGContextFillRect(context, rect);
-    img = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
-    
-    return img;
-}
 
 
 @end

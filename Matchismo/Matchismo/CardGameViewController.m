@@ -13,7 +13,6 @@
 @interface CardGameViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (strong, nonatomic) Grid *grid;
-@property (strong, nonatomic) NSMutableArray *cardViews;
 @property (weak, nonatomic) IBOutlet UIView *gridView;
 
 @end
@@ -21,8 +20,7 @@
 @implementation CardGameViewController
 
 
-
-- (CardMatchingGame *)game // set numberOfPlayingCards property; and numberOfCardsToMatch
+- (CardMatchingGame *)game 
 {
     if (!_game) _game = [[CardMatchingGame alloc] initWithCardCount:self.initialCardCount
                                                           usingDeck:[self createDeck]
@@ -30,21 +28,13 @@
     return _game;
 }
 
-- (NSMutableArray *)cardViews
-{
-    if (!_cardViews) _cardViews = [[NSMutableArray alloc] initWithCapacity:self.initialCardCount];
-    return _cardViews;
-}
-
-
 - (Grid *)grid
 {
     if (!_grid) {
         _grid = [[Grid alloc] init];
-        _grid.size = self.gridView.bounds.size;
+        _grid.size = self.gridView.frame.size;
         _grid.cellAspectRatio = self.maxCardSize.width /self.maxCardSize.height;
         _grid.minimumNumberOfCells = self.initialCardCount;
-        _grid.maxCellWidth = self.maxCardSize.width;
     }
     
     return _grid;
@@ -60,39 +50,43 @@
     return nil;
 }
 
+- (void)toggleChosenProperty:(UIView *)cardView
+{
+    // abstract method. subclass may implement
+}
 
+- (void)updateChosenProperty:(BOOL)cardIsChosen forCardView:(UIView *)cardView
+{
+    // abstract method. subclass may implement
+}
 
 - (void)updateUI
 {
     for (int cardIndex = 0; cardIndex < [self.game numberOfCardsDealt]; cardIndex++) {
         Card *card = [self.game cardAtIndex:cardIndex];
-        // get or create the view associated with each card, if there is one
         UIView *cardView = [self.gridView viewWithTag:(cardIndex + 1)];
         
         
-        if (!cardView) {
+        if (!cardView && !card.isMatched) {
             cardView = [self createCardViewUsingCard:card];
             cardView.tag = cardIndex + 1;
-            // add gesture recognizers?
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                  action:@selector(touchCard:)];
+            [cardView addGestureRecognizer:tap];
             cardView.frame = [self frameForFirstAvailableSpotInGrid:self.grid];
             [self.gridView addSubview:cardView];
+        } else {
+            if (card.isMatched) {
+                [cardView removeFromSuperview];
+            } else {
+                [self updateChosenProperty:card.isChosen forCardView:cardView];
+            }
         }
     }
-    
-    
-    
-    
-//    for (UIButton *cardButton in self.cardButtons) {
-//        int cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
-//        Card *card = [self.game cardAtIndex:cardButtonIndex];
-//        [cardButton setAttributedTitle:[self titleForCard:card] forState:UIControlStateNormal];
-//        [cardButton setBackgroundImage:[self backgroundImageForCard:card] forState:UIControlStateNormal];
-//        cardButton.enabled = !card.isMatched;
-//        self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
-//    }
-    
+    self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
     
 }
+
 
 - (CGRect)frameForFirstAvailableSpotInGrid:(Grid *)grid
 {
@@ -102,6 +96,7 @@
             CGPoint centerPointOfFrame = [grid centerOfCellAtRow:row inColumn:column];
             if (![self pointContainsCardSubview:centerPointOfFrame]) {
                 frame = [self.grid frameOfCellAtRow:row inColumn:column];
+                frame = CGRectInset(frame, frame.size.width * 0.1, frame.size.height * 0.1);
             }
         }
     }
@@ -132,26 +127,17 @@
 }
 
 
-
-
-
-- (UIImage *)backgroundImageForCard:(Card *)card
-{
-    return [UIImage imageNamed:card.isChosen ? @"cardfront" : @"cardback"];
-}
-
-
-
-//- (IBAction)touchCardButton:(UIButton *)sender
+//- (UIImage *)backgroundImageForCard:(Card *)card
 //{
-//    int chosenButtonIndex = [self.cardButtons indexOfObject:sender];
-//    [self.game chooseCardAtIndex:chosenButtonIndex];
-//    if (self.gameModeSegmentedControl) {
-//        self.gameModeSegmentedControl.enabled = NO;
-//    }
-//    [self updateUI];
+//    return [UIImage imageNamed:card.isChosen ? @"cardfront" : @"cardback"];
 //}
 
 
+- (void)touchCard:(UITapGestureRecognizer *)gesture
+{
+    [self.game chooseCardAtIndex:(gesture.view.tag - 1)];
+    [self toggleChosenProperty:gesture.view];
+    [self updateUI];
+}
 
 @end

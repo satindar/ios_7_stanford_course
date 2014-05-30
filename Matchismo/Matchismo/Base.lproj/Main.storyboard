@@ -395,12 +395,6 @@
                                     <action selector="touchCardButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="5IQ-NM-8nE"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Score: 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9K9-yf-wGp">
-                                <rect key="frame" x="215" y="446" width="97" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HGe-Hb-CSF">
                                 <rect key="frame" x="20" y="483" width="100" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -444,7 +438,6 @@
                     <connections>
                         <outlet property="gameModeSegmentedControl" destination="dck-zV-Ohz" id="yXG-ik-9LB"/>
                         <outlet property="lastMoveLabel" destination="FEx-3e-YRD" id="mND-1x-fRF"/>
-                        <outlet property="scoreLabel" destination="9K9-yf-wGp" id="Lu2-Rq-1wo"/>
                         <outletCollection property="cardButtons" destination="iV4-48-gEh" id="3IM-cZ-6gn"/>
                         <outletCollection property="cardButtons" destination="VRF-6L-W84" id="W47-dm-Vb8"/>
                         <outletCollection property="cardButtons" destination="T67-Hh-Wo1" id="n8U-Wi-W52"/>
@@ -512,35 +505,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BNr-yP-KBn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1168" y="403"/>
-        </scene>
-        <!--Delete View Controller-->
-        <scene sceneID="GU7-YP-rtY">
-            <objects>
-                <viewController id="qHJ-Ty-giL" customClass="DeleteViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Vrn-LP-dny"/>
-                        <viewControllerLayoutGuide type="bottom" id="LuQ-s1-yul"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="ewR-bV-ZKt">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uEl-xP-l1Q" customClass="SetCardView">
-                                <rect key="frame" x="98" y="246" width="190" height="117"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <gestureRecognizers/>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <connections>
-                        <outlet property="setCardView" destination="uEl-xP-l1Q" id="YId-Rg-PHl"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="QKX-lc-L5F" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1596" y="536"/>
         </scene>
         <!--Set Game View Controller-->
         <scene sceneID="Zau-5J-OdV">
@@ -978,12 +942,6 @@
                                     <action selector="touchCardButton:" destination="hNU-Zh-mp2" eventType="touchUpInside" id="eCC-qV-9y3"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Score: 0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XJ5-Nz-445">
-                                <rect key="frame" x="203" y="459" width="97" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SE5-IT-eQ0">
                                 <rect key="frame" x="9" y="459" width="100" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1014,7 +972,6 @@
                     </navigationItem>
                     <connections>
                         <outlet property="lastMoveLabel" destination="kMD-dC-uB4" id="40U-VD-dU4"/>
-                        <outlet property="scoreLabel" destination="XJ5-Nz-445" id="KFy-tK-MeD"/>
                         <outletCollection property="cardButtons" destination="dXS-N8-NpG" id="AeV-xt-Q83"/>
                         <outletCollection property="cardButtons" destination="Ekt-ur-XaI" id="RlB-Mi-eGy"/>
                         <outletCollection property="cardButtons" destination="Md3-Cm-VhJ" id="9Hp-OP-y2P"/>
@@ -1142,13 +1099,21 @@
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T8Y-CN-aJp">
                                 <rect key="frame" x="33" y="69" width="255" height="396"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.90196079015731812" green="0.90196079015731812" blue="0.90196079015731812" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Score: 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9pB-i9-8Cw">
+                                <rect key="frame" x="33" y="527" width="109" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
                         <outlet property="gridView" destination="T8Y-CN-aJp" id="DgQ-k6-n2A"/>
+                        <outlet property="scoreLabel" destination="9pB-i9-8Cw" id="P6X-Tc-Oj1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qim-18-MBX" userLabel="First Responder" sceneMemberID="firstResponder"/>
