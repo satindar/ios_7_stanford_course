@@ -37,12 +37,6 @@
     return cardView;
 }
 
-- (void)toggleChosenProperty:(UIView *)cardView
-{
-    SetCardView *setCardView = (SetCardView *)cardView;
-    setCardView.isChosen = !setCardView.isChosen;
-}
-
 - (void)updateChosenProperty:(BOOL)cardIsChosen forCardView:(UIView *)cardView
 {
     SetCardView *setCardView = (SetCardView *)cardView;
@@ -56,9 +50,8 @@
     self.initialCardCount = 12;
     self.numberOfCardsToMatch = 3;
     self.maxNumberOfCardsOnScreen = 21;
+    self.maxCardsOnGrid = 30;
     [self newGame];
 }
-
-
 
 @end

@@ -35,7 +35,7 @@
         _grid = [[Grid alloc] init];
         _grid.size = self.gridView.frame.size;
         _grid.cellAspectRatio = self.maxCardSize.width /self.maxCardSize.height;
-        _grid.minimumNumberOfCells = self.initialCardCount * 1.5;
+        _grid.minimumNumberOfCells = self.maxCardsOnGrid;
     }
     
     return _grid;
@@ -46,14 +46,9 @@
     return nil;
 }
 
-- (UIView *)createCardViewUsingCard:(Card *)card
+- (UIView *)createCardViewUsingCard:(Card *)card // abstract
 {
     return nil;
-}
-
-- (void)toggleChosenProperty:(UIView *)cardView
-{
-    // abstract method. subclass may implement
 }
 
 - (void)updateChosenProperty:(BOOL)cardIsChosen forCardView:(UIView *)cardView
@@ -141,16 +136,9 @@
 }
 
 
-//- (UIImage *)backgroundImageForCard:(Card *)card
-//{
-//    return [UIImage imageNamed:card.isChosen ? @"cardfront" : @"cardback"];
-//}
-
-
 - (void)touchCard:(UITapGestureRecognizer *)gesture
 {
     [self.game chooseCardAtIndex:(gesture.view.tag - 1)];
-    [self toggleChosenProperty:gesture.view];
     [self updateUI];
 }
 

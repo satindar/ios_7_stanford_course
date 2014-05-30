@@ -8,6 +8,8 @@
 
 #import "PlayingCardGameViewController.h"
 #import "PlayingCardDeck.h"
+#import "PlayingCard.h"
+#import "PlayingCardView.h"
 
 @interface PlayingCardGameViewController ()
 
@@ -18,6 +20,35 @@
 - (Deck *)createDeck
 {
     return [[PlayingCardDeck alloc] init];
+}
+
+- (UIView *)createCardViewUsingCard:(Card *)card
+{
+    PlayingCardView *cardView = [[PlayingCardView alloc] init];
+    PlayingCard *playingCard = (PlayingCard *)card;
+    
+    cardView.rank = playingCard.rank;
+    cardView.suit = playingCard.suit;
+    cardView.faceUp = NO;
+    
+    return cardView;
+}
+
+- (void)updateChosenProperty:(BOOL)cardIsChosen forCardView:(UIView *)cardView
+{
+    PlayingCardView *playingCardView = (PlayingCardView *)cardView;
+    playingCardView.faceUp = cardIsChosen;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.maxCardSize = CGSizeMake(300, 450);
+    self.initialCardCount = 25;
+    self.numberOfCardsToMatch = 3;
+    self.maxNumberOfCardsOnScreen = self.initialCardCount;
+    self.maxCardsOnGrid = self.maxNumberOfCardsOnScreen;
+    [self newGame];
 }
 
 @end
