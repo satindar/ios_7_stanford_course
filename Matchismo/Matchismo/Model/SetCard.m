@@ -51,14 +51,14 @@
 }
 
 
-+ (NSArray *)rankStrings
++ (NSArray *)attributeStrings
 {
     return @[@"?", @"1", @"2", @"3"];
 }
 
 + (NSUInteger)maxRank
 {
-    return [[self rankStrings] count] - 1;
+    return [[self attributeStrings] count] - 1;
 }
 
 - (void)setRank:(NSUInteger)rank
@@ -91,10 +91,10 @@
 
 - (NSDictionary *)cardAttributes
 {
-    return @{@"symbol": [SetCard rankStrings][self.symbol],
-             @"rank": [SetCard rankStrings][self.rank],
-             @"shading": [SetCard rankStrings][self.shading],
-             @"color": [SetCard rankStrings][self.color] };
+    return @{@"symbol": [SetCard attributeStrings][self.symbol],
+             @"rank": [SetCard attributeStrings][self.rank],
+             @"shading": [SetCard attributeStrings][self.shading],
+             @"color": [SetCard attributeStrings][self.color] };
 }
 
 @end

@@ -8,32 +8,46 @@
 
 #import "CardGameViewController.h"
 #import "PlayingCardDeck.h"
-#import "MoveHistoryViewController.h"
+#import "Grid.h"
 
 @interface CardGameViewController ()
-@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *gameModeSegmentedControl;
-@property (weak, nonatomic) IBOutlet UILabel *lastMoveLabel;
-@property (strong, nonatomic) NSMutableArray *moveHistory;
-//@property (weak, nonatomic) 
+@property (strong, nonatomic) Grid *grid;
+@property (strong, nonatomic) NSMutableArray *cardViews;
+@property (weak, nonatomic) IBOutlet UIView *gridView;
 
 @end
 
 @implementation CardGameViewController
 
-- (CardMatchingGame *)game
+
+
+- (CardMatchingGame *)game // set numberOfPlayingCards property; and numberOfCardsToMatch
 {
-    if (!_game) _game = [[CardMatchingGame alloc] initWithCardCount:[self.cardButtons count]
+    if (!_game) _game = [[CardMatchingGame alloc] initWithCardCount:self.initialCardCount
                                                           usingDeck:[self createDeck]
-                                          cardsToMatchInCurrentMode:[self numberOfCardsToMatch]];
+                                          cardsToMatchInCurrentMode:self.numberOfCardsToMatch];
     return _game;
 }
 
-- (NSMutableArray *)moveHistory
+- (NSMutableArray *)cardViews
 {
-    if (!_moveHistory) _moveHistory = [[NSMutableArray alloc] init];
-    return _moveHistory;
+    if (!_cardViews) _cardViews = [[NSMutableArray alloc] initWithCapacity:self.initialCardCount];
+    return _cardViews;
+}
+
+
+- (Grid *)grid
+{
+    if (!_grid) {
+        _grid = [[Grid alloc] init];
+        _grid.size = self.gridView.bounds.size;
+        _grid.cellAspectRatio = self.maxCardSize.width /self.maxCardSize.height;
+        _grid.minimumNumberOfCells = self.initialCardCount;
+        _grid.maxCellWidth = self.maxCardSize.width;
+    }
+    
+    return _grid;
 }
 
 - (Deck *)createDeck // abstract
@@ -41,93 +55,69 @@
     return nil;
 }
 
-- (IBAction)touchCardButton:(UIButton *)sender
+- (UIView *)createCardViewUsingCard:(Card *)card
 {
-    int chosenButtonIndex = [self.cardButtons indexOfObject:sender];
-    [self.game chooseCardAtIndex:chosenButtonIndex];
-    if (self.gameModeSegmentedControl) {
-        self.gameModeSegmentedControl.enabled = NO;
-    }
-    [self updateUI];
+    return nil;
 }
+
+
 
 - (void)updateUI
 {
-    for (UIButton *cardButton in self.cardButtons) {
-        int cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
-        Card *card = [self.game cardAtIndex:cardButtonIndex];
-        [cardButton setAttributedTitle:[self titleForCard:card] forState:UIControlStateNormal];
-        [cardButton setBackgroundImage:[self backgroundImageForCard:card] forState:UIControlStateNormal];
-        cardButton.enabled = !card.isMatched;
-        self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
-    }
-    [self updateLastMoveLabel];
-    
-}
-
-- (void)updateLastMoveLabel
-{
-    NSAttributedString *lastMove = [self descriptionOfLastMove];
-    self.lastMoveLabel.attributedText = lastMove;
-    [self.moveHistory addObject:lastMove];
-    self.game.lastCardsPlayed = nil;
-}
-
-- (NSAttributedString *)descriptionOfLastMove
-{
-    NSString *lastMoveText = @"";
-    int points = self.game.pointsLastScored;
-    NSString *cardsPlayed = @"";
-    NSMutableArray *cards = self.game.lastCardsPlayed;
-
-    for (Card *card in cards) {
-        if ([cardsPlayed length] == 0) {
-            NSString *firstCardPlayed = [NSString stringWithFormat:@"%@", card.contents];
-            cardsPlayed = [cardsPlayed stringByAppendingString:firstCardPlayed];
-        } else {
-            NSString *cardPlayed = [NSString stringWithFormat:@" & %@", card.contents];
-            cardsPlayed = [cardsPlayed stringByAppendingString:cardPlayed];
+    for (int cardIndex = 0; cardIndex < [self.game numberOfCardsDealt]; cardIndex++) {
+        Card *card = [self.game cardAtIndex:cardIndex];
+        // get or create the view associated with each card, if there is one
+        UIView *cardView = [self.gridView viewWithTag:(cardIndex + 1)];
+        
+        
+        if (!cardView) {
+            cardView = [self createCardViewUsingCard:card];
+            cardView.tag = cardIndex + 1;
+            // add gesture recognizers?
+            cardView.frame = [self frameForFirstAvailableSpotInGrid:self.grid];
+            [self.gridView addSubview:cardView];
         }
     }
     
-    NSString *pointDescriptionText = @"points";
-    if (points == 1 || points == -1) {
-        pointDescriptionText = @"point";
-    }
     
-    if ([cards count] == self.game.cardsToMatchInCurrentGameMode) {
-        if (points < 0) {
-            points = points * -1;
-            lastMoveText = [NSString stringWithFormat:@"%@ do not match! %d point penalty.", cardsPlayed, points];
-        } else if (points > 0) {
-            lastMoveText = [NSString stringWithFormat:@"Matched %@ for %d %@!", cardsPlayed, points, pointDescriptionText];
-        } else {
-            lastMoveText = [NSString stringWithFormat:@"No points earned for %@.", cardsPlayed];
+    
+    
+//    for (UIButton *cardButton in self.cardButtons) {
+//        int cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
+//        Card *card = [self.game cardAtIndex:cardButtonIndex];
+//        [cardButton setAttributedTitle:[self titleForCard:card] forState:UIControlStateNormal];
+//        [cardButton setBackgroundImage:[self backgroundImageForCard:card] forState:UIControlStateNormal];
+//        cardButton.enabled = !card.isMatched;
+//        self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
+//    }
+    
+    
+}
+
+- (CGRect)frameForFirstAvailableSpotInGrid:(Grid *)grid
+{
+    CGRect frame;
+    for (int row = 0; row < grid.rowCount; row++) {
+        for (int column = 0; column < grid.columnCount; column++) {
+            CGPoint centerPointOfFrame = [grid centerOfCellAtRow:row inColumn:column];
+            if (![self pointContainsCardSubview:centerPointOfFrame]) {
+                frame = [self.grid frameOfCellAtRow:row inColumn:column];
+            }
         }
-    } else if (points <= 0 && [cards count] > 0){
-        points = points * -1;
-        lastMoveText = [NSString stringWithFormat:@"%@", cardsPlayed];
     }
-    
-    return [[NSAttributedString alloc] initWithString:lastMoveText];
+    return frame;
 }
 
-
-- (IBAction)gameMatchModeChanged:(UISegmentedControl *)sender
+- (BOOL)pointContainsCardSubview:(CGPoint)point
 {
-    self.game.cardsToMatchInCurrentGameMode = [self numberOfCardsToMatch];
-}
-
-- (int)numberOfCardsToMatch
-{
-    int numberOfCards = 0;
-    if (self.gameModeSegmentedControl.selectedSegmentIndex == 0) {
-        numberOfCards = 2;
+    for(UIView *aView in [self.gridView subviews])
+    {
+        if(CGRectContainsPoint(aView.frame, point))
+        {
+            return YES;
+        }
     }
-    if (self.gameModeSegmentedControl.selectedSegmentIndex == 1) {
-        numberOfCards = 3;
-    }
-    return numberOfCards;
+    return NO;
 }
 
 - (IBAction)startNewGame:(UIButton *)sender
@@ -138,33 +128,30 @@
 - (void)newGame
 {
     self.game = nil;
-    if (self.gameModeSegmentedControl) {
-        self.gameModeSegmentedControl.enabled = YES;
-    }
-    self.lastMoveLabel.text = @"";
     [self updateUI];
 }
 
-- (NSAttributedString *)titleForCard:(Card *)card
-{
-    NSString *title = card.isChosen ? card.contents : @"";
-    NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title];
-    return attributedTitle;
-}
+
+
+
 
 - (UIImage *)backgroundImageForCard:(Card *)card
 {
     return [UIImage imageNamed:card.isChosen ? @"cardfront" : @"cardback"];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"history"]) {
-        if ([segue.destinationViewController isKindOfClass:[MoveHistoryViewController class]]) {
-            MoveHistoryViewController *mhvc = (MoveHistoryViewController *)segue.destinationViewController;
-            mhvc.historyOfMoves = self.moveHistory;
-        }
-    }
-}
+
+
+//- (IBAction)touchCardButton:(UIButton *)sender
+//{
+//    int chosenButtonIndex = [self.cardButtons indexOfObject:sender];
+//    [self.game chooseCardAtIndex:chosenButtonIndex];
+//    if (self.gameModeSegmentedControl) {
+//        self.gameModeSegmentedControl.enabled = NO;
+//    }
+//    [self updateUI];
+//}
+
+
 
 @end

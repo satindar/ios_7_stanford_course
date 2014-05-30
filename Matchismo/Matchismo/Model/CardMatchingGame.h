@@ -26,7 +26,7 @@
 - (Card *)cardAtIndex:(NSUInteger)index;
 
 - (void)addCardsIntoPlay:(NSUInteger)numberOfCardsToAdd;
-- (NSUInteger)numberOfCardsInPlay;
+- (NSUInteger)numberOfCardsDealt;
 
 
 @end

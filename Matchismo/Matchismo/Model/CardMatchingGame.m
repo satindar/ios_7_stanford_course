@@ -32,7 +32,7 @@ static const int COST_TO_CHOOSE = 1;
     return _lastCardsPlayed;
 }
 
-- (NSUInteger)numberOfCardsInPlay
+- (NSUInteger)numberOfCardsDealt
 {
     return [self.cards count];
 }
