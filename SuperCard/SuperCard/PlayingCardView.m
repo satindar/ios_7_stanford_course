@@ -47,21 +47,19 @@
     [self setNeedsDisplay];
 }
 
+- (void)setIsMatched:(BOOL)isMatched
+{
+    if (_isMatched != isMatched) {
+        _isMatched = isMatched;
+        [self setNeedsDisplay];
+    }
+}
+
 - (NSString *)rankAsString
 {
     return @[@"?",@"A",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"10",@"J",@"Q",@"K"][self.rank];
 }
 
-#pragma mark - Gesture Handling
-
-- (void)pinch:(UIPinchGestureRecognizer *)gesture
-{
-    if ((gesture.state == UIGestureRecognizerStateChanged) ||
-        (gesture.state == UIGestureRecognizerStateEnded)) {
-        self.faceCardScaleFactor *= gesture.scale;
-        gesture.scale = 1.0;
-    }
-}
 
 #pragma mark - Drawing
 
@@ -81,7 +79,12 @@
     
     [roundedRect addClip];
     
-    [[UIColor whiteColor] setFill];
+    if (self.isMatched) {
+        [[UIColor lightGrayColor] setFill];
+    } else {
+        [[UIColor whiteColor] setFill];
+    }
+    
     UIRectFill(self.bounds);
     
     [[UIColor blackColor] setStroke];

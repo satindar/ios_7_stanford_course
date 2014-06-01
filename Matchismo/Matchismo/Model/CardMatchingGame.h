@@ -27,6 +27,7 @@
 
 - (void)addCardsIntoPlay:(NSUInteger)numberOfCardsToAdd;
 - (NSUInteger)numberOfCardsDealt;
+- (BOOL)deckIsEmpty;
 
 
 @end

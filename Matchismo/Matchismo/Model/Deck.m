@@ -47,4 +47,9 @@
     return randomCard;
 }
 
+- (BOOL)deckIsEmpty
+{
+    return (![self.cards count]);
+}
+
 @end

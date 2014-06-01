@@ -37,20 +37,22 @@
     return cardView;
 }
 
-- (void)updateChosenProperty:(BOOL)cardIsChosen forCardView:(UIView *)cardView
+
+- (void)updateChosenProperty:(BOOL)cardIsChosen andMatchedProperty:(BOOL)cardIsMatched forCardView:(UIView *)cardView
 {
     SetCardView *setCardView = (SetCardView *)cardView;
+    setCardView.isMatched = cardIsMatched;
     setCardView.isChosen = cardIsChosen;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.maxCardSize = CGSizeMake(450, 300);
+    self.maxCardSize = CGSizeMake(300, 200);
     self.initialCardCount = 12;
     self.numberOfCardsToMatch = 3;
     self.maxNumberOfCardsOnScreen = 21;
-    self.maxCardsOnGrid = 30;
+    self.maxCardsOnGrid = 21;
     [self newGame];
 }
 

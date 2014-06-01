@@ -16,5 +16,6 @@
 @property (nonatomic) NSUInteger numberOfSymbolsToDisplay;
 
 @property (nonatomic) BOOL isChosen;
+@property (nonatomic) BOOL isMatched;
 
 @end

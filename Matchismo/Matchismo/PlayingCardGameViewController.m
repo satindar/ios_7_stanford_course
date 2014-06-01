@@ -34,10 +34,22 @@
     return cardView;
 }
 
-- (void)updateChosenProperty:(BOOL)cardIsChosen forCardView:(UIView *)cardView
+
+- (void)updateChosenProperty:(BOOL)cardIsChosen andMatchedProperty:(BOOL)cardIsMatched forCardView:(UIView *)cardView
 {
     PlayingCardView *playingCardView = (PlayingCardView *)cardView;
-    playingCardView.faceUp = cardIsChosen;
+    playingCardView.isMatched = cardIsMatched;
+    
+    if (playingCardView.faceUp != cardIsChosen) {
+        [UIView transitionWithView:playingCardView
+                          duration:0.5
+                           options:UIViewAnimationOptionTransitionFlipFromLeft
+                        animations:^(void) {
+                            playingCardView.faceUp = cardIsChosen;
+                        }
+                        completion:nil
+         ];
+    }
 }
 
 - (void)viewDidLoad

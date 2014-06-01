@@ -10,16 +10,46 @@
 #import "PlayingCardDeck.h"
 #import "Grid.h"
 
-@interface CardGameViewController ()
+@interface CardGameViewController () <UIDynamicAnimatorDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (strong, nonatomic) Grid *grid;
 @property (weak, nonatomic) IBOutlet UIView *gridView;
 @property (weak, nonatomic) IBOutlet UIButton *addThreeCardsButton;
+@property (strong, nonatomic) UIDynamicAnimator *animator;
+@property (strong, nonatomic) NSMutableArray *cardViews;
+@property (strong, nonatomic) NSMutableArray *centerPointOfViews;
+@property (nonatomic) NSInteger quantityOfCardsOnScreen;
 
 @end
 
 @implementation CardGameViewController
 
+- (NSMutableArray *)cardViews
+{
+    if (!_cardViews) _cardViews = [[NSMutableArray alloc] init];
+    return _cardViews;
+}
+- (NSMutableArray *)centerPointOfViews
+{
+    if (!_centerPointOfViews) _centerPointOfViews = [[NSMutableArray alloc] init];
+    return _centerPointOfViews;
+}
+
+- (NSInteger)quantityOfCardsOnScreen
+{
+    if (!_quantityOfCardsOnScreen) _quantityOfCardsOnScreen = 0;
+    return _quantityOfCardsOnScreen;
+}
+
+- (UIDynamicAnimator *)animator
+{
+    if (!_animator) {
+        _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.gridView];
+        _animator.delegate = self;
+    }
+    
+    return _animator;
+}
 
 - (CardMatchingGame *)game 
 {
@@ -51,7 +81,7 @@
     return nil;
 }
 
-- (void)updateChosenProperty:(BOOL)cardIsChosen forCardView:(UIView *)cardView
+- (void)updateChosenProperty:(BOOL)cardIsChosen andMatchedProperty:(BOOL)cardIsMatched forCardView:(UIView *)cardView
 {
     // abstract method. subclass may implement
 }
@@ -60,41 +90,65 @@
 {
     for (int cardIndex = 0; cardIndex < [self.game numberOfCardsDealt]; cardIndex++) {
         Card *card = [self.game cardAtIndex:cardIndex];
-        UIView *cardView = [self.gridView viewWithTag:(cardIndex + 1)];
+        UIView *cardView;
+        if ([self.cardViews count] > cardIndex) cardView = self.cardViews[cardIndex];
         
         
         if (!cardView && !card.isMatched) {
             cardView = [self createCardViewUsingCard:card];
-            cardView.tag = cardIndex + 1;
+            [self.cardViews addObject:cardView];
+            self.quantityOfCardsOnScreen++;
+
             UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                   action:@selector(touchCard:)];
             [cardView addGestureRecognizer:tap];
             cardView.frame = [self frameForFirstAvailableSpotInGrid:self.grid];
-            [self.gridView addSubview:cardView];
+            [self addViewWithAnimation:cardView];
+            [self.centerPointOfViews addObject:[NSValue valueWithCGPoint:cardView.center]];
         } else {
             if (card.isMatched) {
+                [self updateChosenProperty:card.isChosen andMatchedProperty:card.isMatched forCardView:cardView];
                 [self removeViewWithAnimation:cardView];
+                self.quantityOfCardsOnScreen--;
             } else {
-                [self updateChosenProperty:card.isChosen forCardView:cardView];
+                [self updateChosenProperty:card.isChosen andMatchedProperty:card.isMatched forCardView:cardView];
             }
         }
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
     
-    if ([[self.gridView subviews] count] > self.maxNumberOfCardsOnScreen - 2) {
-        self.addThreeCardsButton.enabled = NO;
+    if (self.quantityOfCardsOnScreen > self.maxNumberOfCardsOnScreen - 2) {
+        self.addThreeCardsButton.hidden = YES;
+    } else if ([self.game deckIsEmpty]) {
+        self.addThreeCardsButton.hidden = YES;
     } else {
-        self.addThreeCardsButton.enabled = YES;
+        self.addThreeCardsButton.hidden = NO;
     }
     
 }
 
-- (void)removeViewWithAnimation:(UIView *)view
+- (void)addViewWithAnimation:(UIView *)view
 {
-    [UIView animateWithDuration:1.0
+    [UIView animateWithDuration:0.5
                           delay:0.0
                         options:UIViewAnimationOptionBeginFromCurrentState
-                     animations:^{ view.alpha = 0.0; }
+                     animations:^{
+                         [self.gridView addSubview:view];
+                         view.alpha = 0.0;
+                         view.alpha = 1.0;
+                     }
+                     completion:nil
+     ];
+}
+
+- (void)removeViewWithAnimation:(UIView *)view
+{
+    [UIView animateWithDuration:0.5
+                          delay:0.5
+                        options:UIViewAnimationOptionBeginFromCurrentState
+                     animations:^{
+                         view.alpha = 0.0;
+                     }
                      completion:^(BOOL finished) {
                          if (finished) {
                              [view removeFromSuperview];
@@ -132,6 +186,14 @@
     return NO;
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    UIPinchGestureRecognizer *pinch =
+        [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(stackCards:)];
+    [self.gridView addGestureRecognizer:pinch];
+}
+
 - (IBAction)startNewGame:(UIButton *)sender
 {
     [self newGame];
@@ -145,31 +207,74 @@
 
 - (void)newGame
 {
-    self.game = nil;
     [UIView animateWithDuration:0.5
                           delay:0.0
                         options:UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
-                         for (UIView *cardView in [self.gridView subviews]) {
+                         for (UIView *cardView in self.cardViews) {
                              cardView.alpha = 0.0;
                          }
                      }
                      completion:^(BOOL finished) {
                          if (finished) {
-                             [[self.gridView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                             [self.cardViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                             self.cardViews = nil;
+                             self.game = nil;
+                             self.quantityOfCardsOnScreen = 0;
                              [self updateUI];
                          }
                      }
      ];
 }
 
+- (void)stackCards:(UIPinchGestureRecognizer *)gesture
+{
+    // add dynamic behavior here
+//    UIGravityBehavior *gravity = [[UIGravityBehavior alloc] init];
+//    [self.animator addBehavior:gravity];
 
-
+    [UIView animateWithDuration:1.5
+                          delay:0.0
+                        options:UIViewAnimationOptionLayoutSubviews
+                     animations:^{
+                         for (UIView *cardView in self.cardViews) {
+                             cardView.center = self.gridView.center;
+                             UITapGestureRecognizer *tapStack = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                                        action:@selector(tapStackOfCards:)];
+                             
+                             [cardView addGestureRecognizer:tapStack];
+                             
+                         }
+                     }
+                     completion:nil
+     ];
+    
+}
 
 - (void)touchCard:(UITapGestureRecognizer *)gesture
 {
-    [self.game chooseCardAtIndex:(gesture.view.tag - 1)];
+    [self.game chooseCardAtIndex:[self.cardViews indexOfObject:gesture.view]];
     [self updateUI];
+}
+
+- (void)tapStackOfCards:(UITapGestureRecognizer *)gesture
+{
+    [UIView animateWithDuration:1.5
+                          delay:0.0
+                        options:UIViewAnimationOptionLayoutSubviews
+                     animations:^{
+                         for (UIView *cardView in self.cardViews) {
+                             int cardIndex = [self.cardViews indexOfObject:cardView];
+                             UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                                   action:@selector(touchCard:)];
+                             
+                             [cardView addGestureRecognizer:tap];
+                             CGPoint center = [self.centerPointOfViews[cardIndex] CGPointValue];
+                             cardView.center = center;
+                         }
+                     }
+                     completion:nil
+     ];
 }
 
 @end

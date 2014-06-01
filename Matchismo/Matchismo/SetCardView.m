@@ -52,6 +52,14 @@
     }
 }
 
+- (void)setIsMatched:(BOOL)isMatched
+{
+    if (_isMatched != isMatched) {
+        _isMatched = isMatched;
+        [self setNeedsDisplay];
+    }
+}
+
 #pragma mark - Drawing
 
 #define CORNER_FONT_STANDARD_HEIGHT 180.0
@@ -65,7 +73,9 @@
     UIBezierPath *roundedRect =[UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:[self cornerRadius]];
     [roundedRect addClip]; // never draw outside the rounded rect
     
-    if (self.isChosen) {
+    if (self.isMatched) {
+        [[UIColor yellowColor] setFill];
+    } else if (self.isChosen) {
         [[UIColor lightGrayColor] setFill];
     } else {
         [[UIColor whiteColor] setFill];
@@ -78,6 +88,7 @@
     
     [self drawSymbolsWithAttributes];
 }
+
 
 - (void)drawSymbolsWithAttributes
 {
