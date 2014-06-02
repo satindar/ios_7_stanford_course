@@ -29,6 +29,7 @@
     if (!_cardViews) _cardViews = [[NSMutableArray alloc] init];
     return _cardViews;
 }
+
 - (NSMutableArray *)centerPointOfViews
 {
     if (!_centerPointOfViews) _centerPointOfViews = [[NSMutableArray alloc] init];
@@ -117,9 +118,7 @@
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
     
-    if (self.quantityOfCardsOnScreen > self.maxNumberOfCardsOnScreen - 2) {
-        self.addThreeCardsButton.hidden = YES;
-    } else if ([self.game deckIsEmpty]) {
+    if (self.quantityOfCardsOnScreen > self.maxNumberOfCardsOnScreen - 2 || [self.game deckIsEmpty]) {
         self.addThreeCardsButton.hidden = YES;
     } else {
         self.addThreeCardsButton.hidden = NO;
@@ -202,6 +201,7 @@
 - (IBAction)addThreeCardsToPlay:(UIButton *)sender
 {
     [self.game addCardsIntoPlay:3];
+    self.animator = nil;
     [self updateUI];
 }
 
@@ -221,6 +221,7 @@
                              self.cardViews = nil;
                              self.game = nil;
                              self.quantityOfCardsOnScreen = 0;
+                             self.animator = nil;
                              [self updateUI];
                          }
                      }
@@ -229,27 +230,27 @@
 
 - (void)stackCards:(UIPinchGestureRecognizer *)gesture
 {
-    // add dynamic behavior here
-//    UIGravityBehavior *gravity = [[UIGravityBehavior alloc] init];
-//    [self.animator addBehavior:gravity];
-
     [UIView animateWithDuration:1.5
                           delay:0.0
                         options:UIViewAnimationOptionLayoutSubviews
                      animations:^{
+                         
                          for (UIView *cardView in self.cardViews) {
                              cardView.center = self.gridView.center;
                              UITapGestureRecognizer *tapStack = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                                         action:@selector(tapStackOfCards:)];
                              
                              [cardView addGestureRecognizer:tapStack];
-                             
+
                          }
                      }
-                     completion:nil
+                     completion:^(BOOL finished) {
+                         //
+                     }
      ];
     
 }
+
 
 - (void)touchCard:(UITapGestureRecognizer *)gesture
 {
@@ -273,7 +274,9 @@
                              cardView.center = center;
                          }
                      }
-                     completion:nil
+                     completion:^(BOOL finished) {
+                         self.animator = nil;
+                     }
      ];
 }
 
