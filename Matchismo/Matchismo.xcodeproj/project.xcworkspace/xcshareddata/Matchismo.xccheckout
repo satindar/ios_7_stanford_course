@@ -10,29 +10,29 @@
 	<string>Matchismo</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>96A3C868-8415-4AC3-B2F5-CAF8F901CE84</key>
+		<key>19D91A38E35845083B95E5977D57354CA001198B</key>
 		<string>ssh://github.com/satindar/ios_7_stanford_course.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Matchismo/Matchismo.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>96A3C868-8415-4AC3-B2F5-CAF8F901CE84</key>
+		<key>19D91A38E35845083B95E5977D57354CA001198B</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>ssh://github.com/satindar/ios_7_stanford_course.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>96A3C868-8415-4AC3-B2F5-CAF8F901CE84</string>
+	<string>19D91A38E35845083B95E5977D57354CA001198B</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>96A3C868-8415-4AC3-B2F5-CAF8F901CE84</string>
+			<string>19D91A38E35845083B95E5977D57354CA001198B</string>
 			<key>IDESourceControlWCCName</key>
 			<string>ios_7_stanford_course</string>
 		</dict>
